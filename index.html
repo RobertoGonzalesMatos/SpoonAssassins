@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spoon Assassins</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: var(--font);
+        background-color: var(--bg);
+        color: #eee;
+        padding: 1rem;
+        background-image: url("./static.gif");
+        background-repeat: repeat;
+        background-size: cover;
+      }
+
+      #countdown {
+        font-weight: bold;
+        font-size: 1.25rem;
+        color: var(--primary);
+        text-shadow: var(--glow);
+        display: inline-block;
+        margin-top: 0.5rem;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🥄 Spoon Assassins</h1>
+      <p class="instructions">
+        <strong>Objective:</strong> Eliminate your assigned target by tagging
+        them with a spoon.<br /><br />
+        <strong>Rules:</strong><br />
+        1. Targets holding a visible spoon are immune.<br />
+        2. Once you eliminate someone, their target becomes yours.<br />
+        3. Post a pic of your eliminated target in spoon-assassins Slack.<br /><br />
+        🥄 Spoons are at <strong>Townsend Lobby</strong>.
+      </p>
+
+      <form id="joinForm">
+        <input id="firstName" type="text" placeholder="First Name" required />
+        <input id="lastName" type="text" placeholder="Last Name" required />
+        <button type="submit">Join the Game</button>
+      </form>
+
+      <div id="userInfo" class="hidden">
+        <p>Welcome, <span id="username"></span>!</p>
+        <p>Game starts in <span id="countdown"></span></p>
+      </div>
+
+      <div id="adminPanel" class="hidden">
+        <h2>Admin Panel</h2>
+        <button onclick="assignTargets()">Assign Targets</button>
+        <button onclick="resetGame()">Reset Game</button>
+      </div>
+    </div>
+
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Your Target 🎯</h2>
+        <p id="modalTargetName"></p>
+        <button onclick="closeModal()">Got it!</button>
+      </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+    <script>
+      const countdownEl = document.getElementById("countdown");
+      const targetDate = new Date("June 17, 2025 10:00:00").getTime();
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance <= 0) {
+          countdownEl.textContent = "Now!";
+          clearInterval(interval);
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+
+      const interval = setInterval(updateCountdown, 1000);
+      updateCountdown();
+    </script>
+  </body>
+</html>
