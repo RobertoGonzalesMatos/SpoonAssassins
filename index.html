@@ -35,7 +35,7 @@
         <strong>Objective:</strong> Eliminate your assigned target by tagging
         them with a spoon.<br /><br />
         <strong>Rules:</strong><br />
-        1. Targets holding a visible spoon are immune.<br />
+        1. Targets holding a visible spoon or in their work-dest are immune.<br />
         2. Once you eliminate someone, their target becomes yours.<br />
         3. Post a pic of your eliminated target in spoon-assassins Slack.<br /><br />
         🥄 Spoons are at <strong>Townsend Lobby</strong>.
@@ -61,7 +61,7 @@
 
     <div id="modal" class="modal hidden">
       <div class="modal-content">
-        <h2>Your Target 🎯</h2>
+        <h2>Your Target</h2>
         <p id="modalTargetName"></p>
         <button onclick="closeModal()">Got it!</button>
       </div>
@@ -70,7 +70,7 @@
     <script type="module" src="app.js"></script>
     <script>
       const countdownEl = document.getElementById("countdown");
-      const targetDate = new Date("June 17, 2025 10:00:00").getTime();
+      const targetDate = new Date("June 20, 2025 10:00:00").getTime();
 
       function updateCountdown() {
         const now = new Date().getTime();
