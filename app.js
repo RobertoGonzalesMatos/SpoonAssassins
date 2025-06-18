@@ -35,6 +35,7 @@ async function checkIfGameActive() {
     if (savedName === "Roberto Gonzales") {
       adminPanel.classList.remove("hidden");
     }
+    await updatePlayerCount();
     checkForTarget();
   }
 }
@@ -61,10 +62,67 @@ joinForm.onsubmit = async (e) => {
     await setDoc(playerDocRef, {
       name: currentUser.displayName,
     });
+    await updatePlayerCount();
   }
 
   checkForTarget();
 };
+
+async function updatePlayerCount() {
+  const snapshot = await getDocs(collection(db, "players"));
+  document.getElementById("playerCount").textContent = snapshot.size;
+}
+
+async function checkForWinner() {
+  const snapshot = await getDocs(collection(db, "players"));
+  if (snapshot.size === 1) {
+    const winner = snapshot.docs[0].id;
+    alert(`🎉 The winner is ${winner}!`);
+    showTargetModal(`🎉 Winner: ${winner}`);
+  }
+}
+
+
+window.eliminatePlayer = async () => {
+  const first = document.getElementById("elimFirstName").value.trim();
+  const last = document.getElementById("elimLastName").value.trim();
+  const fullName = `${first} ${last}`;
+
+  const elimDocRef = doc(db, "assignments", fullName);
+  const elimDocSnap = await getDoc(elimDocRef);
+
+  if (!elimDocSnap.exists()) {
+    alert("That player doesn't have an assignment.");
+    return;
+  }
+
+  const eliminatedTarget = elimDocSnap.data().target;
+
+  // Find who had this eliminated person as their target
+  const allAssignments = await getDocs(collection(db, "assignments"));
+  let assassin = null;
+
+  allAssignments.forEach((docSnap) => {
+    if (docSnap.data().target === fullName) {
+      assassin = docSnap.id;
+    }
+  });
+
+  if (assassin) {
+    await setDoc(doc(db, "assignments", assassin), {
+      target: eliminatedTarget,
+    });
+  }
+
+  await deleteDoc(doc(db, "assignments", fullName));
+  await deleteDoc(doc(db, "players", fullName));
+
+  alert(`${fullName} eliminated. ${assassin ? "Reassigned target to " + assassin : "No assassin found."}`);
+
+  await updatePlayerCount();
+  await checkForWinner();
+};
+
 
 async function checkForTarget() {
   const docRef = doc(db, "assignments", currentUser.uid);

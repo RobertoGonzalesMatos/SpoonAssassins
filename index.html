@@ -50,12 +50,19 @@
       <div id="userInfo" class="hidden">
         <p>Welcome, <span id="username"></span>!</p>
         <p>Game starts in <span id="countdown"></span></p>
+        <p><strong>Players in game:</strong> <span id="playerCount">0</span></p>
       </div>
 
       <div id="adminPanel" class="hidden">
         <h2>Admin Panel</h2>
         <button onclick="assignTargets()">Assign Targets</button>
         <button onclick="resetGame()">Reset Game</button>
+
+        <h3>Eliminate a Player</h3>
+        <input id="elimFirstName" type="text" placeholder="First Name" />
+        <input id="elimLastName" type="text" placeholder="Last Name" />
+        <button onclick="eliminatePlayer()">Eliminate</button>
+
       </div>
     </div>
 
